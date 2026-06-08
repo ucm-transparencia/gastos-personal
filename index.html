@@ -4,22 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gastos de Personal — Portal de Transparencia UCM</title>
-<meta name="description" content="Gastos de personal de la Universidad Complutense de Madrid. Ejercicio 2024. Portal de Transparencia.">
+<meta name="description" content="Gastos de personal de la Universidad Complutense de Madrid. Ejercicio 2026 (Prórroga 2025). Portal de Transparencia.">
 
-<!-- Fuentes -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
-<!-- Iconos -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<!-- SheetJS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
 <style>
-/* ═══════════════════════════════════════════════
-   VARIABLES Y RESET
-═══════════════════════════════════════════════ */
 :root {
   --rojo:       #b71234;
   --rojo-dark:  #8b0d27;
@@ -27,6 +20,9 @@
   --rojo-mid:   #d94060;
   --azul:       #2563c6;
   --azul-light: #e8f0fb;
+  --ambar:      #d97706;
+  --ambar-bg:   #fffbeb;
+  --ambar-borde:#fcd34d;
   --gris:       #3d3d3d;
   --gris-medio: #6b7280;
   --gris-claro: #f3f4f6;
@@ -40,234 +36,80 @@
   --fuente-display: 'DM Serif Display', Georgia, serif;
   --transicion: .22s cubic-bezier(.4,0,.2,1);
 }
-
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
+body { font-family: var(--fuente); background: #f0f2f5; color: var(--gris); min-height: 100vh; padding: 20px; line-height: 1.5; }
 
-body {
-  font-family: var(--fuente);
-  background: #f0f2f5;
-  color: var(--gris);
-  min-height: 100vh;
-  padding: 20px;
-  line-height: 1.5;
-}
+.container { max-width: 1200px; margin: 0 auto; background: var(--blanco); border-radius: 14px; box-shadow: var(--sombra-l); overflow: hidden; }
 
-/* ═══════════════════════════════════════════════
-   CONTENEDOR
-═══════════════════════════════════════════════ */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  background: var(--blanco);
-  border-radius: 14px;
-  box-shadow: var(--sombra-l);
-  overflow: hidden;
-}
-
-/* ═══════════════════════════════════════════════
-   CABECERA
-═══════════════════════════════════════════════ */
-.header {
-  background: linear-gradient(135deg, var(--rojo) 0%, var(--rojo-dark) 100%);
-  color: var(--blanco);
-  padding: 18px 32px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-}
+/* CABECERA */
+.header { background: linear-gradient(135deg, var(--rojo) 0%, var(--rojo-dark) 100%); color: var(--blanco); padding: 18px 32px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .header-left { display: flex; align-items: center; gap: 14px; }
-.header-icon {
-  width: 40px; height: 40px;
-  background: rgba(255,255,255,.15);
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px; flex-shrink: 0;
-}
-.header h1 {
-  font-family: var(--fuente);
-  font-size: 18px; font-weight: 600;
-  line-height: 1.25; letter-spacing: -.01em;
-}
-.header h1 span {
-  display: block; font-size: 12px;
-  font-weight: 400; opacity: .75; margin-top: 2px;
-}
-.ejercicio-badge {
-  background: rgba(255,255,255,.18);
-  border: 1px solid rgba(255,255,255,.35);
-  border-radius: 20px;
-  padding: 5px 16px;
-  font-size: 12px; font-weight: 700;
-  letter-spacing: .05em; white-space: nowrap; flex-shrink: 0;
-}
+.header-icon { width: 40px; height: 40px; background: rgba(255,255,255,.15); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.header h1 { font-family: var(--fuente); font-size: 18px; font-weight: 600; line-height: 1.25; letter-spacing: -.01em; }
+.header h1 span { display: block; font-size: 12px; font-weight: 400; opacity: .75; margin-top: 2px; }
+.ejercicio-badge { background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.35); border-radius: 20px; padding: 5px 16px; font-size: 12px; font-weight: 700; letter-spacing: .05em; white-space: nowrap; flex-shrink: 0; }
 
-/* ═══════════════════════════════════════════════
-   BARRA CONTROLES / EXPORTACIÓN
-═══════════════════════════════════════════════ */
-.controls-bar {
-  padding: 12px 32px;
-  background: var(--blanco);
-  border-bottom: 2px solid var(--borde);
-  display: flex; align-items: center;
-  gap: 12px; flex-wrap: wrap;
-}
-.controls-info {
-  font-size: 12px; color: var(--gris-medio);
-  font-style: italic; flex: 1; min-width: 0;
-}
+/* BARRA CONTROLES */
+.controls-bar { padding: 12px 32px; background: var(--blanco); border-bottom: 2px solid var(--borde); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.controls-info { font-size: 12px; color: var(--gris-medio); font-style: italic; flex: 1; min-width: 0; }
 .export-group { display: flex; gap: 8px; }
-.export-btn {
-  display: inline-flex; align-items: center; gap: 7px;
-  padding: 8px 16px; border: none; border-radius: 8px;
-  font-weight: 600; font-size: 12px; cursor: pointer;
-  transition: all var(--transicion);
-  font-family: var(--fuente); color: var(--blanco); white-space: nowrap;
-}
+.export-btn { display: inline-flex; align-items: center; gap: 7px; padding: 8px 16px; border: none; border-radius: 8px; font-weight: 600; font-size: 12px; cursor: pointer; transition: all var(--transicion); font-family: var(--fuente); color: var(--blanco); white-space: nowrap; }
 .export-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,.22); }
-.export-btn:focus-visible { outline: 3px solid var(--rojo); outline-offset: 2px; }
 .export-btn.xlsx { background: #1D6F42; }
 .export-btn.csv  { background: #217346; }
 .export-btn svg  { width: 14px; height: 14px; flex-shrink: 0; }
 
-/* ═══════════════════════════════════════════════
-   MAIN
-═══════════════════════════════════════════════ */
+/* PRORROGA BANNER */
+.prorroga-banner { background: var(--ambar-bg); border-bottom: 2px solid var(--ambar-borde); padding: 12px 32px; display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #78350f; }
+.prorroga-banner strong { color: var(--ambar); }
+
+/* MAIN */
 .main { padding: 32px 32px 64px; }
 
-/* ═══════════════════════════════════════════════
-   KPI CARDS
-═══════════════════════════════════════════════ */
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px; margin-bottom: 40px;
-}
-.kpi-card {
-  background: var(--blanco);
-  border: 1px solid var(--borde);
-  border-top: 3px solid var(--rojo);
-  border-radius: var(--radio);
-  padding: 20px 18px 16px;
-  box-shadow: var(--sombra-s);
-  transition: box-shadow var(--transicion), transform var(--transicion);
-}
+/* KPI */
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
+.kpi-card { background: var(--blanco); border: 1px solid var(--borde); border-top: 3px solid var(--rojo); border-radius: var(--radio); padding: 20px 18px 16px; box-shadow: var(--sombra-s); transition: box-shadow var(--transicion), transform var(--transicion); }
 .kpi-card:hover { box-shadow: var(--sombra-m); transform: translateY(-2px); }
 .kpi-card.azul  { border-top-color: var(--azul); }
-.kpi-label {
-  font-size: 10.5px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .06em;
-  color: var(--gris-medio); margin-bottom: 8px;
-}
-.kpi-value {
-  font-family: var(--fuente-display);
-  font-size: 26px; color: var(--rojo);
-  line-height: 1; margin-bottom: 5px;
-}
-.kpi-card.azul .kpi-value { color: var(--azul); }
+.kpi-card.ambar { border-top-color: var(--ambar); }
+.kpi-label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--gris-medio); margin-bottom: 8px; }
+.kpi-value { font-family: var(--fuente-display); font-size: 26px; color: var(--rojo); line-height: 1; margin-bottom: 5px; }
+.kpi-card.azul  .kpi-value { color: var(--azul); }
+.kpi-card.ambar .kpi-value { color: var(--ambar); font-size: 16px; margin-top: 4px; }
 .kpi-sub { font-size: 11px; color: var(--gris-medio); line-height: 1.4; }
 
-/* ═══════════════════════════════════════════════
-   SECCIONES
-═══════════════════════════════════════════════ */
+/* SECCIONES */
 .section { margin-bottom: 48px; }
-.section-header {
-  margin-bottom: 22px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid var(--rojo-light);
-  display: flex; align-items: baseline;
-  gap: 12px; flex-wrap: wrap;
-}
-.section-header h2 {
-  font-family: var(--fuente-display);
-  font-size: 20px; color: var(--rojo-dark); font-weight: 400;
-}
-.section-header .section-meta {
-  font-size: 12px; color: var(--gris-medio); font-style: italic;
-}
+.section-header { margin-bottom: 22px; padding-bottom: 12px; border-bottom: 2px solid var(--rojo-light); display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.section-header h2 { font-family: var(--fuente-display); font-size: 20px; color: var(--rojo-dark); font-weight: 400; }
+.section-header .section-meta { font-size: 12px; color: var(--gris-medio); font-style: italic; }
 
-/* ═══════════════════════════════════════════════
-   GRID GRÁFICO + TABLA
-═══════════════════════════════════════════════ */
-.split-grid {
-  display: grid;
-  grid-template-columns: 1fr 1.35fr;
-  gap: 24px; align-items: start;
-}
+/* GRID */
+.split-grid { display: grid; grid-template-columns: 1fr 1.35fr; gap: 24px; align-items: start; }
 
-/* ═══════════════════════════════════════════════
-   CAJA DE GRÁFICO
-═══════════════════════════════════════════════ */
-.chart-box {
-  background: var(--gris-claro);
-  border: 1px solid var(--borde);
-  border-radius: var(--radio); padding: 20px;
-}
-.chart-box-full {
-  background: var(--gris-claro);
-  border: 1px solid var(--borde);
-  border-radius: var(--radio); padding: 20px;
-  margin-top: 24px;
-}
-.chart-title {
-  font-size: 11px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .05em;
-  color: var(--gris-medio); margin-bottom: 16px;
-}
+/* CHART BOX */
+.chart-box { background: var(--gris-claro); border: 1px solid var(--borde); border-radius: var(--radio); padding: 20px; }
+.chart-box-full { background: var(--gris-claro); border: 1px solid var(--borde); border-radius: var(--radio); padding: 20px; margin-top: 24px; }
+.chart-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--gris-medio); margin-bottom: 16px; }
 
-/* Barras horizontales custom */
+/* BARRAS HORIZONTALES */
 .hbars { display: flex; flex-direction: column; gap: 14px; }
-.hbar-labels {
-  display: flex; justify-content: space-between;
-  margin-bottom: 5px; gap: 8px;
-}
+.hbar-labels { display: flex; justify-content: space-between; margin-bottom: 5px; gap: 8px; }
 .hbar-name { font-size: 12px; color: var(--gris); font-weight: 500; }
 .hbar-pct  { font-size: 12px; color: var(--rojo); font-weight: 700; white-space: nowrap; }
-.hbar-track {
-  height: 10px; background: var(--borde);
-  border-radius: 5px; overflow: hidden;
-}
-.hbar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--rojo) 0%, var(--rojo-mid) 100%);
-  border-radius: 5px;
-  transition: width .9s cubic-bezier(.4,0,.2,1);
-  width: 0;
-}
+.hbar-track { height: 10px; background: var(--borde); border-radius: 5px; overflow: hidden; }
+.hbar-fill  { height: 100%; background: linear-gradient(90deg, var(--rojo) 0%, var(--rojo-mid) 100%); border-radius: 5px; transition: width .9s cubic-bezier(.4,0,.2,1); width: 0; }
 
-/* ═══════════════════════════════════════════════
-   TABLAS
-═══════════════════════════════════════════════ */
-.tabla-wrap {
-  overflow-x: auto; -webkit-overflow-scrolling: touch;
-  border-radius: var(--radio);
-  box-shadow: var(--sombra-s); border: 1px solid var(--borde);
-}
-table {
-  width: 100%; border-collapse: collapse;
-  font-size: 13px; background: var(--blanco);
-}
-thead tr {
-  background: linear-gradient(135deg, var(--rojo) 0%, var(--rojo-dark) 100%);
-  color: var(--blanco);
-}
-thead th {
-  padding: 11px 14px; text-align: left;
-  font-size: 11px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: .04em; white-space: nowrap;
-}
+/* TABLAS */
+.tabla-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radio); box-shadow: var(--sombra-s); border: 1px solid var(--borde); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; background: var(--blanco); }
+thead tr { background: linear-gradient(135deg, var(--rojo) 0%, var(--rojo-dark) 100%); color: var(--blanco); }
+thead th { padding: 11px 14px; text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; }
 thead th.r { text-align: right; }
 thead th.c { text-align: center; }
-thead .subhead-row th {
-  background: #a01030; font-size: 10px;
-  padding: 5px 14px; font-weight: 600;
-}
-tbody tr {
-  border-bottom: 1px solid var(--borde);
-  transition: background var(--transicion);
-}
+thead .subhead-row th { background: #a01030; font-size: 10px; padding: 5px 14px; font-weight: 600; }
+tbody tr { border-bottom: 1px solid var(--borde); transition: background var(--transicion); }
 tbody tr:hover { background: #fef7f8; }
 tbody tr:nth-child(even) { background: #fafafa; }
 tbody tr:nth-child(even):hover { background: #fef7f8; }
@@ -276,11 +118,9 @@ td.r    { text-align: right; white-space: nowrap; font-variant-numeric: tabular-
 td.c    { text-align: center; }
 td.bold { font-weight: 700; }
 td.verde { color: #166534; font-weight: 700; }
+td.neut  { color: var(--gris-medio); font-weight: 600; }
 td.muted { color: var(--gris-medio); font-size: 12px; }
-tfoot tr {
-  background: linear-gradient(135deg, var(--rojo) 0%, var(--rojo-dark) 100%);
-  color: var(--blanco);
-}
+tfoot tr { background: linear-gradient(135deg, var(--rojo) 0%, var(--rojo-dark) 100%); color: var(--blanco); }
 tfoot td { padding: 10px 14px; font-weight: 700; font-size: 13px; }
 
 /* Barra género inline */
@@ -288,81 +128,51 @@ tfoot td { padding: 10px 14px; font-weight: 700; font-size: 13px; }
 .gbar .gf { background: var(--rojo); }
 .gbar .gm { background: var(--azul); }
 
-/* ═══════════════════════════════════════════════
-   DIFF BADGE
-═══════════════════════════════════════════════ */
-.diff-badge {
-  display: inline-flex; align-items: center; gap: 10px;
-  background: #fef9e7; border: 1px solid #f5c518;
-  border-radius: 8px; padding: 10px 20px;
-  font-size: 14px; font-weight: 700; color: #7d6005;
-  margin: 0 0 20px;
-}
+/* DIFF BADGE */
+.diff-badge { display: inline-flex; align-items: center; gap: 10px; background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 10px 20px; font-size: 14px; font-weight: 700; color: #166534; margin: 0 0 20px; }
+.diff-badge.neutral { background: #f9fafb; border-color: #d1d5db; color: var(--gris-medio); }
 
-/* ═══════════════════════════════════════════════
-   LEYENDA
-═══════════════════════════════════════════════ */
+/* LEYENDA */
 .legend { display: flex; gap: 18px; font-size: 12px; color: var(--gris-medio); flex-wrap: wrap; }
 .legend-item { display: flex; align-items: center; gap: 6px; }
 .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 .legend-dot.rojo { background: var(--rojo); }
 .legend-dot.azul { background: var(--azul); }
 
-/* ═══════════════════════════════════════════════
-   NOTA / FOOTER
-═══════════════════════════════════════════════ */
-.nota {
-  font-size: 11.5px; color: var(--gris-medio);
-  font-style: italic; margin-top: 10px; line-height: 1.5;
-}
-.footer {
-  padding: 18px 32px; background: #f0f2f5;
-  border-top: 1px solid var(--borde);
-  text-align: center; font-size: 13px; color: var(--gris-medio); line-height: 1.6;
-}
+/* NOTA */
+.nota { font-size: 11.5px; color: var(--gris-medio); font-style: italic; margin-top: 10px; line-height: 1.5; }
+
+/* FOOTER */
+.footer { padding: 18px 32px; background: #f0f2f5; border-top: 1px solid var(--borde); text-align: center; font-size: 13px; color: var(--gris-medio); line-height: 1.6; }
 .footer a { color: var(--rojo-dark); text-decoration: none; font-weight: 600; }
 .footer a:hover { text-decoration: underline; }
 
-/* ═══════════════════════════════════════════════
-   ACCESIBILIDAD
-═══════════════════════════════════════════════ */
 :focus-visible { outline: 3px solid var(--rojo); outline-offset: 3px; border-radius: 3px; }
-.sr-only {
-  position: absolute; width: 1px; height: 1px;
-  padding: 0; margin: -1px; overflow: hidden;
-  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
-}
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
-/* ═══════════════════════════════════════════════
-   RESPONSIVE
-═══════════════════════════════════════════════ */
 @media (max-width: 900px) {
-  .kpi-grid  { grid-template-columns: 1fr 1fr; }
+  .kpi-grid   { grid-template-columns: 1fr 1fr; }
   .split-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
   body { padding: 8px; }
-  .header  { padding: 14px 18px; }
+  .header { padding: 14px 18px; }
   .header h1 { font-size: 15px; }
   .controls-bar { padding: 10px 18px; }
+  .prorroga-banner { padding: 10px 18px; }
   .main { padding: 20px 16px 48px; }
   .kpi-grid { gap: 10px; }
   .kpi-value { font-size: 20px; }
   table { font-size: 12px; }
   td, thead th { padding: 8px 10px; }
 }
-@media (max-width: 400px) {
-  .kpi-grid { grid-template-columns: 1fr; }
-}
+@media (max-width: 400px) { .kpi-grid { grid-template-columns: 1fr; } }
 </style>
 </head>
 
 <body>
 <div class="container">
 
-<!-- ══════════════════════════════════════════
-     CABECERA
-══════════════════════════════════════════ -->
 <header class="header">
   <div class="header-left">
     <div class="header-icon" aria-hidden="true">💶</div>
@@ -371,57 +181,45 @@ tfoot td { padding: 10px 14px; font-weight: 700; font-size: 13px; }
       <span>Portal de Transparencia · Universidad Complutense de Madrid</span>
     </h1>
   </div>
-  <span class="ejercicio-badge">Ejercicio 2024</span>
+  <span class="ejercicio-badge">Ejercicio 2026</span>
 </header>
 
-<!-- ══════════════════════════════════════════
-     BARRA DE EXPORTACIÓN
-══════════════════════════════════════════ -->
+<!-- BANNER PRÓRROGA -->
+<div class="prorroga-banner" role="note">
+  ⚠️ <span><strong>Prórroga presupuestaria:</strong> El presupuesto 2026 es prórroga del ejercicio 2025 (Resolución Rectoral de 5 de mayo de 2026). Los importes del Capítulo I son idénticos a los del presupuesto 2025 prorrogado. Los datos de efectivos corresponden al último período publicado.</span>
+</div>
+
 <div class="controls-bar" role="toolbar" aria-label="Herramientas de exportación">
-  <p class="controls-info">
-    Datos presupuestarios del ejercicio 2024 · Capítulo I del presupuesto UCM
-  </p>
+  <p class="controls-info">Datos presupuestarios del ejercicio 2026 (prórroga 2025) · Capítulo I del presupuesto UCM</p>
   <div class="export-group">
     <button class="export-btn xlsx" id="btn-excel" aria-label="Descargar todos los datos en formato Excel">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-        <polyline points="14 2 14 8 20 8"/>
-        <line x1="16" y1="13" x2="8" y2="13"/>
-        <line x1="16" y1="17" x2="8" y2="17"/>
-      </svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
       Excel (.xlsx)
     </button>
     <button class="export-btn csv" id="btn-csv" aria-label="Descargar todos los datos en formato CSV">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-        <polyline points="7 10 12 15 17 10"/>
-        <line x1="12" y1="15" x2="12" y2="3"/>
-      </svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       CSV
     </button>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     MAIN
-══════════════════════════════════════════ -->
 <main class="main" id="main-content">
 
   <!-- KPI CARDS -->
   <section aria-label="Indicadores clave">
     <div class="kpi-grid">
       <article class="kpi-card" tabindex="0">
-        <div class="kpi-label">Total Capítulo I 2024</div>
-        <div class="kpi-value" aria-label="446 coma 9 millones de euros">446,9 M€</div>
-        <div class="kpi-sub">446.895.053,91 euros presupuestados</div>
+        <div class="kpi-label">Total Capítulo I 2026</div>
+        <div class="kpi-value" aria-label="446 coma 0 millones de euros">446,0 M€</div>
+        <div class="kpi-sub">446.012.872,87 euros presupuestados</div>
       </article>
-      <article class="kpi-card" tabindex="0">
-        <div class="kpi-label">Variación respecto 2023</div>
-        <div class="kpi-value">+3,17%</div>
-        <div class="kpi-sub">+13.727.327,30 € sobre 433.167.726,61 € en 2023</div>
+      <article class="kpi-card ambar" tabindex="0">
+        <div class="kpi-label">Variación respecto 2025</div>
+        <div class="kpi-value">0,00%</div>
+        <div class="kpi-sub">Mismo importe — prórroga del presupuesto 2025</div>
       </article>
       <article class="kpi-card azul" tabindex="0">
-        <div class="kpi-label">Efectivos (sept. 2023)</div>
+        <div class="kpi-label">Efectivos (últ. dato publicado)</div>
         <div class="kpi-value">10.712</div>
         <div class="kpi-sub">PDI · PTGAS · Personal Investigador Predoctoral</div>
       </article>
@@ -433,127 +231,144 @@ tfoot td { padding: 10px 14px; font-weight: 700; font-size: 13px; }
     </div>
   </section>
 
-  <!-- ══════════════════════
-       SECCIÓN 1 — Composición
-  ══════════════════════ -->
+  <!-- SECCIÓN 1: Composición -->
   <section class="section" aria-labelledby="s1">
     <div class="section-header">
-      <h2 id="s1">Composición del gasto de personal 2024</h2>
-      <span class="section-meta">Desglose por concepto presupuestario · Total: 446.895.053,91 €</span>
+      <h2 id="s1">Composición del gasto de personal 2026</h2>
+      <span class="section-meta">Desglose por artículo presupuestario · Total: 446.012.872,87 €</span>
     </div>
-
     <div class="split-grid">
-      <div class="chart-box"
-        role="img"
-        aria-label="Barras horizontales: Personal funcionario 47,78%; Personal laboral 32,22%; Cuotas sociales 17,91%; Incentivos 1,37%; Otro personal 0,72%">
-        <p class="chart-title">Distribución porcentual por concepto</p>
+      <div class="chart-box" role="img" aria-label="Barras horizontales de distribución porcentual por artículo">
+        <p class="chart-title">Distribución porcentual por artículo</p>
         <div class="hbars" id="hbars-composicion" aria-hidden="true"></div>
       </div>
-
       <div class="tabla-wrap">
-        <table aria-label="Gastos de personal 2024 por concepto presupuestario">
+        <table aria-label="Gastos de personal 2026 por artículo presupuestario">
           <thead>
             <tr>
-              <th scope="col">Concepto presupuestario</th>
+              <th scope="col">Artículo presupuestario</th>
               <th scope="col" class="r">Importe (€)</th>
               <th scope="col" class="r">%</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>Personal funcionario</td>              <td class="r bold">213.539.029,18</td><td class="r">47,78%</td></tr>
-            <tr><td>Personal laboral</td>                  <td class="r bold">143.975.152,52</td><td class="r">32,22%</td></tr>
-            <tr><td>Cuotas sociales a cargo del empleador</td><td class="r bold">80.024.364,63</td> <td class="r">17,91%</td></tr>
-            <tr><td>Incentivos al rendimiento</td>         <td class="r bold">6.129.763,35</td>  <td class="r">1,37%</td></tr>
-            <tr><td>Otro personal</td>                     <td class="r bold">3.226.744,23</td>  <td class="r">0,72%</td></tr>
+            <tr><td>Art. 12 — Personal funcionario</td>        <td class="r bold">226.202.839,87</td><td class="r">50,71%</td></tr>
+            <tr><td>Art. 13 — Personal laboral</td>            <td class="r bold">113.356.712,77</td><td class="r">25,42%</td></tr>
+            <tr><td>Art. 16 — Cuotas sociales (empleador)</td> <td class="r bold">97.779.549,71</td> <td class="r">21,93%</td></tr>
+            <tr><td>Art. 15 — Incentivos al rendimiento</td>   <td class="r bold">5.748.497,28</td>  <td class="r">1,29%</td></tr>
+            <tr><td>Art. 14 — Otro personal</td>               <td class="r bold">2.925.273,24</td>  <td class="r">0,66%</td></tr>
           </tbody>
           <tfoot>
-            <tr><td>Total Capítulo I</td><td class="r">446.895.053,91</td><td class="r">100%</td></tr>
+            <tr><td>Total Capítulo I</td><td class="r">446.012.872,87</td><td class="r">100%</td></tr>
           </tfoot>
         </table>
       </div>
     </div>
   </section>
 
-  <!-- ══════════════════════
-       SECCIÓN 2 — Comparativa
-  ══════════════════════ -->
+  <!-- SECCIÓN 2: Comparativa 2026 vs 2025 -->
   <section class="section" aria-labelledby="s2">
     <div class="section-header">
-      <h2 id="s2">Capítulo I por colectivo: comparativa 2024 / 2023</h2>
+      <h2 id="s2">Capítulo I por colectivo: comparativa 2026 / 2025</h2>
       <span class="section-meta">Gasto consolidado por tipo de personal · Euros</span>
     </div>
 
-    <div class="diff-badge" role="status" aria-live="polite">
-      <span aria-hidden="true">▲</span>
-      Incremento 2024 vs 2023: +13.727.327,30 € &nbsp;(+3,17%)
+    <div class="diff-badge neutral" role="status">
+      <span aria-hidden="true">↔</span>
+      Sin variación 2026 vs 2025: 0,00 € &nbsp;(prórroga del presupuesto 2025)
     </div>
 
     <div class="tabla-wrap" style="margin-bottom:24px;">
-      <table aria-label="Comparativa de gastos Capítulo I por colectivo entre 2024 y 2023">
+      <table aria-label="Comparativa de gastos Capítulo I por colectivo entre 2026 y 2025">
         <thead>
           <tr>
             <th scope="col">Colectivo</th>
-            <th scope="col" class="r">2024 (€)</th>
-            <th scope="col" class="r">2024&nbsp;%</th>
-            <th scope="col" class="r">2023 (€)</th>
-            <th scope="col" class="r">2023&nbsp;%</th>
+            <th scope="col" class="r">2026 (€)</th>
+            <th scope="col" class="r">2026&nbsp;%</th>
+            <th scope="col" class="r">2025 (€)</th>
+            <th scope="col" class="r">2025&nbsp;%</th>
             <th scope="col" class="r">Variación (€)</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>Personal Docente e Investigador (PDI)</td>
-            <td class="r bold">272.917.742,89</td><td class="r">61,07%</td>
-            <td class="r">264.677.420,29</td>    <td class="r">61,11%</td>
-            <td class="r verde">+8.240.322,60</td>
+            <td class="r bold">272.574.374,88</td><td class="r">61,13%</td>
+            <td class="r">272.574.374,88</td>    <td class="r">61,13%</td>
+            <td class="r neut">0,00</td>
           </tr>
           <tr>
             <td>Personal Técnico de Gestión y de Adm. y Servicios (PTGAS)</td>
-            <td class="r bold">167.318.909,96</td><td class="r">37,44%</td>
-            <td class="r">162.736.805,98</td>    <td class="r">37,57%</td>
-            <td class="r verde">+4.582.103,98</td>
+            <td class="r bold">167.097.920,05</td><td class="r">37,47%</td>
+            <td class="r">167.097.920,05</td>    <td class="r">37,47%</td>
+            <td class="r neut">0,00</td>
           </tr>
           <tr>
             <td>Otros Gastos de Personal</td>
-            <td class="r bold">6.658.401,06</td>  <td class="r">1,49%</td>
-            <td class="r">5.753.500,34</td>       <td class="r">1,32%</td>
-            <td class="r verde">+904.900,72</td>
+            <td class="r bold">6.340.577,94</td>  <td class="r">1,42%</td>
+            <td class="r">6.340.577,94</td>       <td class="r">1,42%</td>
+            <td class="r neut">0,00</td>
           </tr>
         </tbody>
         <tfoot>
           <tr>
             <td>Total</td>
-            <td class="r">446.895.053,91</td><td class="r">100%</td>
-            <td class="r">433.167.726,61</td><td class="r">100%</td>
-            <td class="r">+13.727.327,30</td>
+            <td class="r">446.012.872,87</td><td class="r">100%</td>
+            <td class="r">446.012.872,87</td><td class="r">100%</td>
+            <td class="r">0,00</td>
           </tr>
         </tfoot>
       </table>
     </div>
 
+    <p class="nota" style="margin-bottom:16px;">* Los importes por colectivo (PDI/PTGAS/Otros) están estimados a partir de los porcentajes estructurales del Capítulo I — artículos 12 a 16 — publicados en el Anexo 2026. Al tratarse de prórroga, la distribución interna replica la del presupuesto 2025.</p>
+
     <div class="chart-box-full">
-      <p class="chart-title">Comparativa 2024 vs 2023 por colectivo (millones €)</p>
-      <canvas id="chart-comparativa" height="110"
-        role="img"
-        aria-label="Gráfico de barras agrupadas: PDI 272,9 M€ (2024) vs 264,7 M€ (2023); PTGAS 167,3 M€ vs 162,7 M€; Otros 6,7 M€ vs 5,8 M€">
-      </canvas>
+      <p class="chart-title">Comparativa 2026 vs 2025 por colectivo (millones €) — importes idénticos por prórroga</p>
+      <canvas id="chart-comparativa" height="110" role="img" aria-label="Gráfico de barras agrupadas por colectivo 2026 vs 2025"></canvas>
     </div>
   </section>
 
-  <!-- ══════════════════════
-       SECCIÓN 3 — Efectivos y género
-  ══════════════════════ -->
-  <section class="section" aria-labelledby="s3">
+  <!-- SECCIÓN 3: Desglose artículos -->
+  <section class="section" aria-labelledby="s3b">
     <div class="section-header">
-      <h2 id="s3">Efectivos por tipo de personal y género</h2>
-      <span class="section-meta">Datos a 30 de septiembre de 2023 · 10.712 efectivos</span>
+      <h2 id="s3b">Desglose Cap. I por artículos — Comparativa 2026 vs 2024</h2>
+      <span class="section-meta">Evolución de los artículos presupuestarios desde el último presupuesto propio</span>
     </div>
+    <div class="tabla-wrap">
+      <table aria-label="Comparativa artículos del Capítulo I entre 2026 (prórroga) y 2024">
+        <thead>
+          <tr>
+            <th scope="col">Artículo</th>
+            <th scope="col" class="r">2026 / prórroga 2025 (€)</th>
+            <th scope="col" class="r">2024 (€)</th>
+            <th scope="col" class="r">Diferencia (€)</th>
+            <th scope="col" class="r">Var. %</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-articulos"></tbody>
+        <tfoot>
+          <tr>
+            <td>Total Capítulo I</td>
+            <td class="r">446.012.872,87</td>
+            <td class="r">446.895.053,91</td>
+            <td class="r">−882.181,04</td>
+            <td class="r">−0,20%</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <p class="nota" style="margin-top:10px;">La comparativa con 2024 muestra el último presupuesto aprobado formalmente antes de las dos prórrogas consecutivas (2025 y 2026). El Capítulo I baja ligeramente (−0,20%) respecto a 2024, reflejo de ajustes en plantilla y cuotas sociales.</p>
+  </section>
 
+  <!-- SECCIÓN 4: Efectivos y género -->
+  <section class="section" aria-labelledby="s4">
+    <div class="section-header">
+      <h2 id="s4">Efectivos por tipo de personal y género</h2>
+      <span class="section-meta">Datos a 30 de septiembre de 2023 · 10.712 efectivos · Última publicación disponible</span>
+    </div>
     <div class="split-grid">
-      <!-- Dona género global -->
-      <div class="chart-box"
-        role="img"
-        aria-label="Gráfico de dona: 52% mujeres (5.606 efectivos) y 48% hombres (5.106 efectivos)">
+      <div class="chart-box" role="img" aria-label="Gráfico de dona: 52% mujeres, 48% hombres">
         <p class="chart-title">Distribución global por género</p>
         <canvas id="chart-dona" style="max-height:230px;"></canvas>
         <div class="legend" style="justify-content:center; margin-top:16px;">
@@ -561,11 +376,9 @@ tfoot td { padding: 10px 14px; font-weight: 700; font-size: 13px; }
           <span class="legend-item"><span class="legend-dot azul" aria-hidden="true"></span>Hombres: 5.106 (48%)</span>
         </div>
       </div>
-
-      <!-- Tabla efectivos -->
       <div>
         <div class="tabla-wrap">
-          <table aria-label="Efectivos por tipo de personal y género a 30 de septiembre de 2023">
+          <table aria-label="Efectivos por tipo de personal y género">
             <thead>
               <tr>
                 <th scope="col" rowspan="2">Tipo de Personal</th>
@@ -575,10 +388,8 @@ tfoot td { padding: 10px 14px; font-weight: 700; font-size: 13px; }
                 <th scope="col" class="c">M / H</th>
               </tr>
               <tr class="subhead-row">
-                <th scope="col" class="r">N.º</th>
-                <th scope="col" class="r">%</th>
-                <th scope="col" class="r">N.º</th>
-                <th scope="col" class="r">%</th>
+                <th scope="col" class="r">N.º</th><th scope="col" class="r">%</th>
+                <th scope="col" class="r">N.º</th><th scope="col" class="r">%</th>
                 <th scope="col" class="r">N.º</th>
                 <th scope="col" class="c">Barra</th>
               </tr>
@@ -639,336 +450,215 @@ tfoot td { padding: 10px 14px; font-weight: 700; font-size: 13px; }
       </div>
     </div>
 
-    <!-- Barras apiladas horizontales -->
     <div class="chart-box-full">
       <p class="chart-title">Efectivos por tipo de personal y género (n.º personas)</p>
       <div style="position:relative; height:280px;">
-        <canvas id="chart-efectivos"
-          role="img"
-          aria-label="Barras horizontales apiladas: número de efectivos por tipo de personal y género">
-        </canvas>
+        <canvas id="chart-efectivos" role="img" aria-label="Barras horizontales apiladas de efectivos por tipo y género"></canvas>
       </div>
     </div>
-
-    <p class="nota" style="margin-top:14px;">
-      * Efectivos referidos a 30 de septiembre de 2023. Datos de gasto: ejercicio presupuestario 2024.
-    </p>
+    <p class="nota" style="margin-top:14px;">* Efectivos referidos a 30 de septiembre de 2023. Datos de gasto: ejercicio presupuestario 2026 (prórroga). Los datos de plantilla se actualizarán cuando se publiquen los correspondientes al ejercicio 2026.</p>
   </section>
 
 </main>
 
-<!-- FOOTER -->
 <footer class="footer">
   <p>
     Datos facilitados por el
     <a href="https://www.ucm.es/directorio/?eid=962" target="_blank" rel="noopener">Vicegerencia económica</a>
     &nbsp;·&nbsp;
-    <a href="https://www.ucm.es/portaldetransparencia/gastos-personal" target="_blank" rel="noopener">
+    <a href="https://www.ucm.es/portaldetransparencia/anexo-presupuestos-2026" target="_blank" rel="noopener">
+      Anexo Presupuestos 2026 <i class="fa fa-external-link" aria-hidden="true" style="color:var(--rojo);font-size:11px;"></i>
+    </a>
+    &nbsp;·&nbsp;
+    <a href="https://www.ucm.es/portaldetransparencia/gastos-de-personal" target="_blank" rel="noopener">
       Portal de Transparencia UCM <i class="fa fa-external-link" aria-hidden="true" style="color:var(--rojo);font-size:11px;"></i>
     </a>
   </p>
 </footer>
 
-</div><!-- /container -->
+</div>
 
-<!-- ══════════════════════════════════════════════════════
-     JAVASCRIPT
-══════════════════════════════════════════════════════ -->
 <script>
 'use strict';
 
-/* ── PALETA ────────────────────────────────────────── */
-const C = {
-  rojo:  '#b71234',
-  rojo2: '#d94060',
-  azul:  '#2563c6',
-  azul2: '#5d8fdd',
-  gris:  '#6b7280',
-  gris2: '#d1d5db',
-  blanco:'#ffffff',
+const C = { rojo:'#b71234', rojo2:'#d94060', azul:'#2563c6', azul2:'#5d8fdd', gris:'#6b7280', gris2:'#d1d5db', blanco:'#ffffff' };
+
+// ── DATOS 2026 (prórroga 2025) ── Fuente: Anexo Presupuestos 2026, UCM ──────
+const COMPOSICION = [
+  { nombre: 'Art.12 Personal funcionario',  pct: 50.71, imp: 226202839.87, imp24: 213539029.18 },
+  { nombre: 'Art.13 Personal laboral',      pct: 25.42, imp: 113356712.77, imp24: 143975152.52 },
+  { nombre: 'Art.16 Cuotas sociales',       pct: 21.93, imp: 97779549.71,  imp24: 80024364.63  },
+  { nombre: 'Art.15 Incentivos rendimiento',pct:  1.29, imp: 5748497.28,   imp24: 6129763.35   },
+  { nombre: 'Art.14 Otro personal',         pct:  0.66, imp: 2925273.24,   imp24: 3226744.23   },
+];
+
+const CAP1 = {
+  labels: ['PDI', 'PTGAS', 'Otros Gastos'],
+  v2026:  [272574374.88, 167097920.05, 6340577.94],
+  v2025:  [272574374.88, 167097920.05, 6340577.94],
 };
 
-/* ── DATOS ─────────────────────────────────────────── */
-const DATA = {
-  composicion: [
-    { nombre: 'Personal funcionario',        pct: 47.78, importe: 213539029.18 },
-    { nombre: 'Personal laboral',            pct: 32.22, importe: 143975152.52 },
-    { nombre: 'Cuotas sociales (empleador)', pct: 17.91, importe: 80024364.63  },
-    { nombre: 'Incentivos al rendimiento',   pct:  1.37, importe: 6129763.35   },
-    { nombre: 'Otro personal',               pct:  0.72, importe: 3226744.23   },
-  ],
-  cap1: {
-    labels: ['PDI', 'PTGAS', 'Otros Gastos'],
-    v2024:  [272917742.89, 167318909.96, 6658401.06],
-    v2023:  [264677420.29, 162736805.98, 5753500.34],
-  },
-  efectivos: {
-    tipos:   ['PDI Funcionario', 'PDI Laboral', 'Inv. Predoctoral', 'PTGAS Funcionario', 'PTGAS Laboral'],
-    mujeres: [1059, 2319, 239, 1259, 730],
-    hombres: [1254, 2174, 228,  463, 987],
-  },
+const EFECTIVOS = {
+  tipos:   ['PDI Funcionario','PDI Laboral','Inv. Predoctoral','PTGAS Funcionario','PTGAS Laboral'],
+  mujeres: [1059, 2319, 239, 1259, 730],
+  hombres: [1254, 2174, 228,  463, 987],
 };
 
-/* ── UTILIDADES ─────────────────────────────────────── */
-const fmtEur = n => n.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const fmtM   = n => (n / 1e6).toLocaleString('es-ES', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+const fmtEur = n => n.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtM   = n => (n/1e6).toLocaleString('es-ES',{minimumFractionDigits:3,maximumFractionDigits:3});
 
-/* ── BARRAS HORIZONTALES CUSTOM ─────────────────────── */
-function initBarrasComposicion() {
+// Barras horizontales
+function initBarras() {
   const container = document.getElementById('hbars-composicion');
-  const maxPct = DATA.composicion[0].pct;
-  DATA.composicion.forEach(d => {
+  const maxPct = COMPOSICION[0].pct;
+  COMPOSICION.forEach(d => {
     const barW = (d.pct / maxPct * 100).toFixed(1);
     container.insertAdjacentHTML('beforeend', `
       <div class="hbar-item">
         <div class="hbar-labels">
           <span class="hbar-name">${d.nombre}</span>
-          <span class="hbar-pct">${d.pct.toLocaleString('es-ES', { minimumFractionDigits: 2 })}%</span>
+          <span class="hbar-pct">${d.pct.toLocaleString('es-ES',{minimumFractionDigits:2})}%</span>
         </div>
-        <div class="hbar-track">
-          <div class="hbar-fill" data-w="${barW}"></div>
-        </div>
+        <div class="hbar-track"><div class="hbar-fill" data-w="${barW}"></div></div>
       </div>`);
   });
-  // Animar después del layout
   requestAnimationFrame(() => requestAnimationFrame(() => {
-    document.querySelectorAll('.hbar-fill').forEach(el => {
-      el.style.width = el.dataset.w + '%';
-    });
+    document.querySelectorAll('.hbar-fill').forEach(el => { el.style.width = el.dataset.w + '%'; });
   }));
 }
 
-/* ── CHART 1: BARRAS AGRUPADAS ──────────────────────── */
+// Tabla artículos comparativa 2026 vs 2024
+function initTablaArticulos() {
+  const tb = document.getElementById('tabla-articulos');
+  COMPOSICION.forEach(d => {
+    const diff = d.imp - d.imp24;
+    const varPct = (diff / d.imp24 * 100).toFixed(2);
+    const cls = diff > 0 ? 'verde' : diff < 0 ? '' : 'neut';
+    const sign = diff >= 0 ? '+' : '';
+    tb.insertAdjacentHTML('beforeend', `<tr>
+      <td>${d.nombre}</td>
+      <td class="r bold">${fmtEur(d.imp)}</td>
+      <td class="r">${fmtEur(d.imp24)}</td>
+      <td class="r ${cls}">${sign}${fmtEur(diff)}</td>
+      <td class="r ${cls}">${sign}${varPct}%</td>
+    </tr>`);
+  });
+}
+
+// Chart barras agrupadas colectivo
 function initChartComparativa() {
   const ctx = document.getElementById('chart-comparativa').getContext('2d');
-  const d = DATA.cap1;
   new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: d.labels,
-      datasets: [
-        {
-          label: '2024',
-          data: d.v2024.map(v => +(v / 1e6).toFixed(3)),
-          backgroundColor: C.rojo,
-          borderRadius: 6,
-          borderSkipped: false,
-        },
-        {
-          label: '2023',
-          data: d.v2023.map(v => +(v / 1e6).toFixed(3)),
-          backgroundColor: C.gris2,
-          borderRadius: 6,
-          borderSkipped: false,
-        },
-      ],
+    type:'bar',
+    data:{
+      labels: CAP1.labels,
+      datasets:[
+        { label:'2026', data: CAP1.v2026.map(v=>+(v/1e6).toFixed(3)), backgroundColor: C.rojo, borderRadius:6, borderSkipped:false },
+        { label:'2025 (base prórroga)', data: CAP1.v2025.map(v=>+(v/1e6).toFixed(3)), backgroundColor: C.gris2, borderRadius:6, borderSkipped:false },
+      ]
     },
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      animation: { duration: 900, easing: 'easeOutQuart' },
-      plugins: {
-        legend: {
-          position: 'top',
-          labels: { font: { size: 12, family: "'DM Sans', sans-serif" }, padding: 18 },
-        },
-        tooltip: {
-          callbacks: {
-            label: ctx => ` ${ctx.dataset.label}: ${fmtM(ctx.raw)} M\u20AC`,
-          },
-        },
+    options:{
+      responsive:true, maintainAspectRatio:true,
+      animation:{duration:900,easing:'easeOutQuart'},
+      plugins:{
+        legend:{position:'top',labels:{font:{size:12,family:"'DM Sans',sans-serif"},padding:18}},
+        tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmtM(c.raw)} M€`}},
+        title:{display:true,text:'Importes idénticos al ser prórroga del presupuesto 2025',font:{size:11},color:C.gris}
       },
-      scales: {
-        x: {
-          grid: { display: false },
-          ticks: { font: { size: 12, family: "'DM Sans', sans-serif" } },
-        },
-        y: {
-          grid: { color: '#e5e7eb' },
-          ticks: {
-            font: { size: 11, family: "'DM Sans', sans-serif" },
-            callback: v => v + ' M\u20AC',
-          },
-          title: {
-            display: true,
-            text: 'Millones de euros',
-            font: { size: 11, family: "'DM Sans', sans-serif" },
-            color: C.gris,
-          },
-        },
-      },
-    },
-  });
-}
-
-/* ── CHART 2: DONA GÉNERO GLOBAL ────────────────────── */
-function initChartDona() {
-  const ctx = document.getElementById('chart-dona').getContext('2d');
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Mujeres', 'Hombres'],
-      datasets: [{
-        data: [5606, 5106],
-        backgroundColor: [C.rojo, C.azul],
-        borderColor: [C.blanco, C.blanco],
-        borderWidth: 4,
-        hoverOffset: 10,
-      }],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      cutout: '65%',
-      animation: { animateRotate: true, duration: 900, easing: 'easeOutQuart' },
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: ctx => ` ${ctx.label}: ${ctx.raw.toLocaleString('es-ES')} efectivos (${ctx.label === 'Mujeres' ? '52' : '48'}%)`,
-          },
-        },
-      },
-    },
-  });
-}
-
-/* ── CHART 3: BARRAS APILADAS HORIZONTALES ──────────── */
-function initChartEfectivos() {
-  const ctx = document.getElementById('chart-efectivos').getContext('2d');
-  const d = DATA.efectivos;
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: d.tipos,
-      datasets: [
-        {
-          label: 'Mujeres',
-          data: d.mujeres,
-          backgroundColor: C.rojo,
-          borderRadius: { topRight: 5, bottomRight: 5 },
-          borderSkipped: 'left',
-          stack: 'g',
-        },
-        {
-          label: 'Hombres',
-          data: d.hombres,
-          backgroundColor: C.azul,
-          borderRadius: { topLeft: 5, bottomLeft: 5 },
-          borderSkipped: 'right',
-          stack: 'g',
-        },
-      ],
-    },
-    options: {
-      indexAxis: 'y',
-      responsive: true,
-      maintainAspectRatio: false,
-      animation: { duration: 900, easing: 'easeOutQuart' },
-      plugins: {
-        legend: {
-          position: 'top',
-          labels: { font: { size: 12, family: "'DM Sans', sans-serif" }, padding: 18 },
-        },
-        tooltip: {
-          callbacks: {
-            label: ctx => ` ${ctx.dataset.label}: ${ctx.raw.toLocaleString('es-ES')} efectivos`,
-          },
-        },
-      },
-      scales: {
-        x: {
-          stacked: true,
-          grid: { color: '#e5e7eb' },
-          ticks: { font: { size: 11, family: "'DM Sans', sans-serif" } },
-          title: {
-            display: true, text: 'N.\u00BA de efectivos',
-            font: { size: 11, family: "'DM Sans', sans-serif" }, color: C.gris,
-          },
-        },
-        y: {
-          stacked: true,
-          grid: { display: false },
-          ticks: { font: { size: 12, family: "'DM Sans', sans-serif" } },
-        },
-      },
-    },
-  });
-}
-
-/* ── EXPORTACIÓN ────────────────────────────────────── */
-function buildExportRows() {
-  return [
-    ['Universidad Complutense de Madrid \u2014 Gastos de Personal. Ejercicio 2024'],
-    ['Fuente: Portal de Transparencia UCM \u00B7 Centro de Inteligencia Institucional'],
-    [],
-    ['1. COMPOSICI\u00D3N DEL GASTO DE PERSONAL 2024'],
-    ['Concepto', 'Importe (\u20AC)', 'Porcentaje'],
-    ['Personal funcionario',               213539029.18, 0.4778],
-    ['Personal laboral',                   143975152.52, 0.3222],
-    ['Cuotas sociales a cargo empleador',  80024364.63,  0.1791],
-    ['Incentivos al rendimiento',          6129763.35,   0.0137],
-    ['Otro personal',                      3226744.23,   0.0072],
-    ['TOTAL',                              446895053.91, 1.0],
-    [],
-    ['2. CAP\u00CDTULO I POR COLECTIVO \u2014 COMPARATIVA 2024 vs 2023'],
-    ['Colectivo', 'Importe 2024 (\u20AC)', '% 2024', 'Importe 2023 (\u20AC)', '% 2023', 'Variaci\u00F3n (\u20AC)'],
-    ['PDI',     272917742.89, 0.6107, 264677420.29, 0.6111, 8240322.60],
-    ['PTGAS',   167318909.96, 0.3744, 162736805.98, 0.3757, 4582103.98],
-    ['Otros',   6658401.06,   0.0149, 5753500.34,   0.0132, 904900.72],
-    ['Total',   446895053.91, 1.0,    433167726.61, 1.0,    13727327.30],
-    [],
-    ['3. EFECTIVOS POR TIPO DE PERSONAL Y G\u00C9NERO (a 30/09/2023)'],
-    ['Tipo de Personal', 'Mujeres (N.\u00BA)', '% s/mujeres', 'Hombres (N.\u00BA)', '% s/hombres', 'Total', '% mujeres s/total', '% hombres s/total'],
-    ['PDI Funcionario',              1059, 0.1889, 1254, 0.2456, 2313, 0.4578, 0.5422],
-    ['PDI Laboral',                  2319, 0.4137, 2174, 0.4258, 4493, 0.5161, 0.4839],
-    ['Personal Inv. Predoctoral',    239,  0.0426, 228,  0.0447, 467,  0.5118, 0.4882],
-    ['PTGAS Funcionario',            1259, 0.2246, 463,  0.0907, 1722, 0.7311, 0.2689],
-    ['PTGAS Laboral',                730,  0.1302, 987,  0.1933, 1717, 0.4252, 0.5748],
-    ['Total',                        5606, 1.0,    5106, 1.0,    10712, 0.52,   0.48],
-  ];
-}
-
-document.getElementById('btn-excel').addEventListener('click', () => {
-  const rows = buildExportRows();
-  const ws = XLSX.utils.aoa_to_sheet(rows);
-  const range = XLSX.utils.decode_range(ws['!ref']);
-  for (let R = 0; R <= range.e.r; R++) {
-    for (let Col = 0; Col <= range.e.c; Col++) {
-      const addr = XLSX.utils.encode_cell({ r: R, c: Col });
-      if (ws[addr] && typeof ws[addr].v === 'number') {
-        ws[addr].z = ws[addr].v > 1 ? '#,##0.00' : '0.00%';
+      scales:{
+        x:{grid:{display:false},ticks:{font:{size:12,family:"'DM Sans',sans-serif"}}},
+        y:{grid:{color:'#e5e7eb'},ticks:{font:{size:11,family:"'DM Sans',sans-serif"},callback:v=>v+' M€'},
+          title:{display:true,text:'Millones de euros',font:{size:11,family:"'DM Sans',sans-serif"},color:C.gris}}
       }
     }
-  }
-  ws['!merges'] = [
-    { s: { r:0, c:0 }, e: { r:0, c:7 } },
-    { s: { r:1, c:0 }, e: { r:1, c:7 } },
+  });
+}
+
+// Chart dona género
+function initChartDona() {
+  const ctx = document.getElementById('chart-dona').getContext('2d');
+  new Chart(ctx,{
+    type:'doughnut',
+    data:{labels:['Mujeres','Hombres'],datasets:[{data:[5606,5106],backgroundColor:[C.rojo,C.azul],borderColor:[C.blanco,C.blanco],borderWidth:4,hoverOffset:10}]},
+    options:{responsive:true,maintainAspectRatio:true,cutout:'65%',animation:{animateRotate:true,duration:900,easing:'easeOutQuart'},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.label}: ${c.raw.toLocaleString('es-ES')} efectivos (${c.label==='Mujeres'?'52':'48'}%)`}}}}
+  });
+}
+
+// Chart efectivos apilado
+function initChartEfectivos() {
+  const ctx = document.getElementById('chart-efectivos').getContext('2d');
+  new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels: EFECTIVOS.tipos,
+      datasets:[
+        {label:'Mujeres',data:EFECTIVOS.mujeres,backgroundColor:C.rojo,borderRadius:{topRight:5,bottomRight:5},borderSkipped:'left',stack:'g'},
+        {label:'Hombres',data:EFECTIVOS.hombres,backgroundColor:C.azul,borderRadius:{topLeft:5,bottomLeft:5},borderSkipped:'right',stack:'g'},
+      ]
+    },
+    options:{
+      indexAxis:'y',responsive:true,maintainAspectRatio:false,animation:{duration:900,easing:'easeOutQuart'},
+      plugins:{legend:{position:'top',labels:{font:{size:12,family:"'DM Sans',sans-serif"},padding:18}},
+        tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.raw.toLocaleString('es-ES')} efectivos`}}},
+      scales:{
+        x:{stacked:true,grid:{color:'#e5e7eb'},ticks:{font:{size:11,family:"'DM Sans',sans-serif"}},title:{display:true,text:'N.º de efectivos',font:{size:11},color:C.gris}},
+        y:{stacked:true,grid:{display:false},ticks:{font:{size:12,family:"'DM Sans',sans-serif"}}}
+      }
+    }
+  });
+}
+
+// Exportación
+function buildExportRows(){
+  return [
+    ['Universidad Complutense de Madrid — Gastos de Personal. Ejercicio 2026 (Prórroga Presupuesto 2025)'],
+    ['Resolución Rectoral de 5 de mayo de 2026'],
+    ['Fuente: Portal de Transparencia UCM · Anexo Presupuestos 2026'],
+    [],
+    ['1. COMPOSICIÓN DEL GASTO DE PERSONAL 2026 POR ARTÍCULO'],
+    ['Artículo','Importe 2026 (€)','% 2026','Importe 2024 (€)','Diferencia (€)','Var. %'],
+    ...COMPOSICION.map(d=>[d.nombre,d.imp,d.pct/100,d.imp24,+(d.imp-d.imp24).toFixed(2),+((d.imp-d.imp24)/d.imp24*100).toFixed(2)]),
+    ['Total Capítulo I',446012872.87,1.0,446895053.91,-882181.04,-0.20],
+    [],
+    ['2. CAPÍTULO I POR COLECTIVO — 2026 (= 2025 POR PRÓRROGA)'],
+    ['Colectivo','Importe 2026 (€)','% 2026','Importe 2025 (€)','Variación (€)'],
+    ['PDI',272574374.88,0.6113,272574374.88,0],
+    ['PTGAS',167097920.05,0.3747,167097920.05,0],
+    ['Otros Gastos de Personal',6340577.94,0.0142,6340577.94,0],
+    ['Total Capítulo I',446012872.87,1.0,446012872.87,0],
+    [],
+    ['3. EFECTIVOS POR TIPO DE PERSONAL Y GÉNERO (a 30/09/2023 — último dato publicado)'],
+    ['Tipo de Personal','Mujeres (N.º)','% s/mujeres','Hombres (N.º)','% s/hombres','Total','% mujeres s/total'],
+    ['PDI Funcionario',1059,0.1889,1254,0.2456,2313,0.4578],
+    ['PDI Laboral',2319,0.4137,2174,0.4258,4493,0.5161],
+    ['Personal Inv. Predoctoral',239,0.0426,228,0.0447,467,0.5118],
+    ['PTGAS Funcionario',1259,0.2246,463,0.0907,1722,0.7311],
+    ['PTGAS Laboral',730,0.1302,987,0.1933,1717,0.4252],
+    ['Total',5606,1.0,5106,1.0,10712,0.52],
   ];
-  ws['!cols'] = [{ wch:44 },{ wch:18 },{ wch:10 },{ wch:18 },{ wch:10 },{ wch:16 },{ wch:14 },{ wch:14 }];
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Gastos Personal 2024');
-  XLSX.writeFile(wb, 'UCM_GastosPersonal_2024.xlsx');
+}
+
+document.getElementById('btn-excel').addEventListener('click',()=>{
+  const rows=buildExportRows();
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:6}},{s:{r:1,c:0},e:{r:1,c:6}},{s:{r:2,c:0},e:{r:2,c:6}}];
+  ws['!cols']=[{wch:44},{wch:18},{wch:10},{wch:18},{wch:16},{wch:14},{wch:14}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Gastos Personal 2026');
+  XLSX.writeFile(wb,'UCM_GastosPersonal_2026.xlsx');
 });
 
-document.getElementById('btn-csv').addEventListener('click', () => {
-  const rows = buildExportRows();
-  const csv = 'sep=;\r\n' + rows.map(row =>
-    row.map(cell => {
-      const s = (cell == null) ? '' : String(cell);
-      return s.includes(';') || s.includes('"') ? `"${s.replace(/"/g,'""')}"` : s;
-    }).join(';')
-  ).join('\r\n');
-  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'UCM_GastosPersonal_2024.csv';
-  a.click();
+document.getElementById('btn-csv').addEventListener('click',()=>{
+  const rows=buildExportRows();
+  const csv='sep=;\r\n'+rows.map(r=>r.map(c=>{const s=c==null?'':String(c);return s.includes(';')||s.includes('"')?`"${s.replace(/"/g,'""')}"`:s;}).join(';')).join('\r\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='UCM_GastosPersonal_2026.csv';a.click();
 });
 
-/* ── INIT ───────────────────────────────────────────── */
-document.addEventListener('DOMContentLoaded', () => {
-  initBarrasComposicion();
+document.addEventListener('DOMContentLoaded',()=>{
+  initBarras();
+  initTablaArticulos();
   initChartComparativa();
   initChartDona();
   initChartEfectivos();
