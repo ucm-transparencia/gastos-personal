@@ -123,6 +123,10 @@ td.muted { color: var(--gris-medio); font-size: 12px; }
 tfoot tr { background: linear-gradient(135deg, var(--rojo) 0%, var(--rojo-dark) 100%); color: var(--blanco); }
 tfoot td { padding: 10px 14px; font-weight: 700; font-size: 13px; }
 
+/* Art group rows */
+tr.group-header td { background: var(--rojo-light); font-weight: 700; font-size: 12px; color: var(--rojo-dark); padding: 6px 14px; border-bottom: 1px solid #e8b8c4; }
+tr.sub-row td:first-child { padding-left: 28px; color: var(--gris-medio); font-size: 12px; }
+
 /* Barra género inline */
 .gbar { display: flex; height: 7px; border-radius: 4px; overflow: hidden; min-width: 72px; }
 .gbar .gf { background: var(--rojo); }
@@ -131,6 +135,7 @@ tfoot td { padding: 10px 14px; font-weight: 700; font-size: 13px; }
 /* DIFF BADGE */
 .diff-badge { display: inline-flex; align-items: center; gap: 10px; background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 10px 20px; font-size: 14px; font-weight: 700; color: #166534; margin: 0 0 20px; }
 .diff-badge.neutral { background: #f9fafb; border-color: #d1d5db; color: var(--gris-medio); }
+.diff-badge.info { background: var(--azul-light); border-color: #93c5fd; color: #1e3a8a; }
 
 /* LEYENDA */
 .legend { display: flex; gap: 18px; font-size: 12px; color: var(--gris-medio); flex-wrap: wrap; }
@@ -141,6 +146,10 @@ tfoot td { padding: 10px 14px; font-weight: 700; font-size: 13px; }
 
 /* NOTA */
 .nota { font-size: 11.5px; color: var(--gris-medio); font-style: italic; margin-top: 10px; line-height: 1.5; }
+
+/* FUENTE BADGE */
+.fuente-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--gris-claro); border: 1px solid var(--borde); border-radius: 6px; padding: 5px 12px; font-size: 11px; color: var(--gris-medio); margin-top: 12px; }
+.fuente-badge strong { color: var(--gris); }
 
 /* FOOTER */
 .footer { padding: 18px 32px; background: #f0f2f5; border-top: 1px solid var(--borde); text-align: center; font-size: 13px; color: var(--gris-medio); line-height: 1.6; }
@@ -190,7 +199,7 @@ tfoot td { padding: 10px 14px; font-weight: 700; font-size: 13px; }
 </div>
 
 <div class="controls-bar" role="toolbar" aria-label="Herramientas de exportación">
-  <p class="controls-info">Datos presupuestarios del ejercicio 2026 (prórroga 2025) · Capítulo I del presupuesto UCM</p>
+  <p class="controls-info">Datos presupuestarios del ejercicio 2026 (prórroga 2025) y liquidación 2024 · Capítulo I del presupuesto UCM</p>
   <div class="export-group">
     <button class="export-btn xlsx" id="btn-excel" aria-label="Descargar todos los datos en formato Excel">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
@@ -231,7 +240,77 @@ tfoot td { padding: 10px 14px; font-weight: 700; font-size: 13px; }
     </div>
   </section>
 
-  <!-- SECCIÓN 1: Composición -->
+  <!-- SECCIÓN 1: Distribución 2024 liquidado — NUEVA -->
+  <section class="section" aria-labelledby="s0">
+    <div class="section-header">
+      <h2 id="s0">Distribución de los costes de personal por grupos de clasificación — Ejercicio 2024</h2>
+      <span class="section-meta">Obligaciones reconocidas netas · Estado de liquidación del presupuesto · Total: 483.860.634,98 €</span>
+    </div>
+
+    <div class="diff-badge info" role="status">
+      <span aria-hidden="true">📋</span>
+      Datos de ejecución real 2024 · Fuente: Cuentas Anuales UCM 2024, aprobadas por el Consejo de Gobierno
+    </div>
+
+    <div class="split-grid">
+      <div class="chart-box" role="img" aria-label="Barras horizontales de distribución porcentual por grupo de clasificación 2024">
+        <p class="chart-title">Distribución porcentual por grupo — 2024 liquidado</p>
+        <div class="hbars" id="hbars-2024"></div>
+      </div>
+      <div class="tabla-wrap">
+        <table aria-label="Distribución de costes de personal por grupos de clasificación 2024">
+          <thead>
+            <tr>
+              <th scope="col">Grupo de clasificación</th>
+              <th scope="col" class="r">Obligaciones rec. netas (€)</th>
+              <th scope="col" class="r">% s/total personal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="group-header"><td colspan="3">Personal Funcionario (Art. 12x)</td></tr>
+            <tr class="sub-row"><td>Art. 120 — Retribuciones Básicas</td>            <td class="r">85.371.156,38</td><td class="r">17,64%</td></tr>
+            <tr class="sub-row"><td>Art. 121 — Retribuciones Complementarias</td>   <td class="r">135.827.047,20</td><td class="r">28,07%</td></tr>
+            <tr class="sub-row"><td>Art. 123 — Asignación por Destino Extranjero</td><td class="r">30.997,08</td>    <td class="r">0,01%</td></tr>
+            <tr><td class="bold">Subtotal Personal Funcionario</td>                  <td class="r bold">221.229.200,66</td><td class="r bold">45,72%</td></tr>
+
+            <tr class="group-header"><td colspan="3">Personal Laboral (Art. 13x)</td></tr>
+            <tr class="sub-row"><td>Art. 130 — Personal Laboral Fijo</td>            <td class="r">94.191.289,67</td><td class="r">19,47%</td></tr>
+            <tr class="sub-row"><td>Art. 131 — Personal Laboral Eventual</td>        <td class="r">63.681.801,17</td><td class="r">13,16%</td></tr>
+            <tr><td class="bold">Subtotal Personal Laboral</td>                      <td class="r bold">157.873.090,84</td><td class="r bold">32,63%</td></tr>
+
+            <tr class="group-header"><td colspan="3">Otro Personal y Retribuciones Variables (Art. 14x / 15x)</td></tr>
+            <tr class="sub-row"><td>Art. 141 — Otro Personal</td>                    <td class="r">3.204.792,11</td> <td class="r">0,66%</td></tr>
+            <tr class="sub-row"><td>Art. 150 — Productividad</td>                    <td class="r">5.472.747,29</td> <td class="r">1,13%</td></tr>
+            <tr class="sub-row"><td>Art. 151 — Gratificaciones</td>                  <td class="r">360.871,79</td>   <td class="r">0,07%</td></tr>
+            <tr><td class="bold">Subtotal Otro Personal / Retrib. Variables</td>     <td class="r bold">9.038.411,19</td><td class="r bold">1,87%</td></tr>
+
+            <tr class="group-header"><td colspan="3">Cuotas Sociales y Gastos Sociales (Art. 16x)</td></tr>
+            <tr class="sub-row"><td>Art. 160 — Cuotas Sociales (cuota patronal)</td> <td class="r">85.088.973,11</td><td class="r">17,59%</td></tr>
+            <tr class="sub-row"><td>Art. 161 — Prestaciones Sociales</td>            <td class="r">9.774.767,53</td> <td class="r">2,02%</td></tr>
+            <tr class="sub-row"><td>Art. 162 — Gastos Sociales a favor del Personal</td><td class="r">856.193,65</td><td class="r">0,18%</td></tr>
+            <tr><td class="bold">Subtotal Cuotas y Gastos Sociales</td>              <td class="r bold">95.719.934,29</td><td class="r bold">19,78%</td></tr>
+          </tbody>
+          <tfoot>
+            <tr><td>Total Capítulo I — Ejercicio 2024 (liquidado)</td><td class="r">483.860.634,98</td><td class="r">100%</td></tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <div class="chart-box-full" style="margin-top:24px;">
+      <p class="chart-title">Composición del gasto de personal 2024 por grupo (millones €)</p>
+      <div style="position:relative; height:260px;">
+        <canvas id="chart-2024" role="img" aria-label="Gráfico de barras horizontales del gasto de personal 2024 por grupo de clasificación"></canvas>
+      </div>
+    </div>
+
+    <div class="fuente-badge">
+      📄 <strong>Fuente:</strong> Cuentas Anuales 2024 — Universidad Complutense de Madrid · Estado de Liquidación del Presupuesto de Gastos, Capítulo I (pág. 72) · Auditadas por Ernst &amp; Young
+    </div>
+    <p class="nota" style="margin-top:8px;">Los artículos 12x agrupan las retribuciones del personal funcionario (PDI y PTGAS); los artículos 13x, las del personal laboral. El desglose PDI/PTGAS dentro de cada artículo no figura en las cuentas anuales publicadas y requiere consulta al sistema de nóminas.</p>
+  </section>
+
+  <!-- SECCIÓN 2: Composición presupuesto vigente -->
   <section class="section" aria-labelledby="s1">
     <div class="section-header">
       <h2 id="s1">Distribución del gasto de personal por clasificación económica 2026</h2>
@@ -266,7 +345,7 @@ tfoot td { padding: 10px 14px; font-weight: 700; font-size: 13px; }
     </div>
   </section>
 
-  <!-- SECCIÓN 2: Comparativa 2026 vs 2025 -->
+  <!-- SECCIÓN 3: Comparativa 2026 vs 2025 -->
   <section class="section" aria-labelledby="s2">
     <div class="section-header">
       <h2 id="s2">Capítulo I por colectivo: comparativa 2026 / 2025</h2>
@@ -329,7 +408,7 @@ tfoot td { padding: 10px 14px; font-weight: 700; font-size: 13px; }
     </div>
   </section>
 
-  <!-- SECCIÓN 3: Desglose artículos -->
+  <!-- SECCIÓN 4: Desglose artículos -->
   <section class="section" aria-labelledby="s3b">
     <div class="section-header">
       <h2 id="s3b">Desglose Cap. I por artículos — Comparativa 2026 vs 2024</h2>
@@ -361,7 +440,7 @@ tfoot td { padding: 10px 14px; font-weight: 700; font-size: 13px; }
     <p class="nota" style="margin-top:10px;">La comparativa con 2024 muestra el último presupuesto aprobado formalmente antes de las dos prórrogas consecutivas (2025 y 2026). El Capítulo I baja ligeramente (−0,20%) respecto a 2024, reflejo de ajustes en plantilla y cuotas sociales.</p>
   </section>
 
-  <!-- SECCIÓN 4: Efectivos y género -->
+  <!-- SECCIÓN 5: Efectivos y género -->
   <section class="section" aria-labelledby="s4">
     <div class="section-header">
       <h2 id="s4">Efectivos por tipo de personal y género</h2>
@@ -504,14 +583,23 @@ const EFECTIVOS = {
   hombres: [1254, 2174, 228,  463, 987],
 };
 
+// ── DATOS 2024 LIQUIDADO ── Fuente: Cuentas Anuales UCM 2024, pág. 72 ───────
+const GRUPOS_2024 = [
+  { nombre: 'Personal Funcionario (Art. 12x)', imp: 221229200.66, pct: 45.72 },
+  { nombre: 'Personal Laboral (Art. 13x)',     imp: 157873090.84, pct: 32.63 },
+  { nombre: 'Cuotas y Gastos Sociales (Art. 16x)', imp: 95719934.29, pct: 19.78 },
+  { nombre: 'Otro Personal / Retrib. Variables (Art. 14x-15x)', imp: 9038411.19, pct: 1.87 },
+];
+
 const fmtEur = n => n.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2});
 const fmtM   = n => (n/1e6).toLocaleString('es-ES',{minimumFractionDigits:3,maximumFractionDigits:3});
 
-// Barras horizontales
-function initBarras() {
-  const container = document.getElementById('hbars-composicion');
-  const maxPct = COMPOSICION[0].pct;
-  COMPOSICION.forEach(d => {
+// Barras horizontales genéricas
+function renderBarras(containerId, items, colorVar) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const maxPct = items[0].pct;
+  items.forEach(d => {
     const barW = (d.pct / maxPct * 100).toFixed(1);
     container.insertAdjacentHTML('beforeend', `
       <div class="hbar-item">
@@ -523,8 +611,41 @@ function initBarras() {
       </div>`);
   });
   requestAnimationFrame(() => requestAnimationFrame(() => {
-    document.querySelectorAll('.hbar-fill').forEach(el => { el.style.width = el.dataset.w + '%'; });
+    container.querySelectorAll('.hbar-fill').forEach(el => { el.style.width = el.dataset.w + '%'; });
   }));
+}
+
+// Chart barras horizontales 2024
+function initChart2024() {
+  const ctx = document.getElementById('chart-2024').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: GRUPOS_2024.map(d => d.nombre),
+      datasets: [{
+        label: 'Obligaciones reconocidas netas 2024 (M€)',
+        data: GRUPOS_2024.map(d => +(d.imp/1e6).toFixed(3)),
+        backgroundColor: [C.rojo, C.rojo2, '#e57a93', '#f0a8ba'],
+        borderRadius: 6,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 900, easing: 'easeOutQuart' },
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: c => ` ${fmtM(c.raw)} M€ (${GRUPOS_2024[c.dataIndex].pct}%)` } }
+      },
+      scales: {
+        x: { grid: { color: '#e5e7eb' }, ticks: { font: { size: 11, family: "'DM Sans',sans-serif" }, callback: v => v + ' M€' },
+             title: { display: true, text: 'Millones de euros', font: { size: 11 }, color: C.gris } },
+        y: { grid: { display: false }, ticks: { font: { size: 12, family: "'DM Sans',sans-serif" } } }
+      }
+    }
+  });
 }
 
 // Tabla artículos comparativa 2026 vs 2024
@@ -612,23 +733,42 @@ function initChartEfectivos() {
 // Exportación
 function buildExportRows(){
   return [
-    ['Universidad Complutense de Madrid — Gastos de Personal. Ejercicio 2026 (Prórroga Presupuesto 2025)'],
-    ['Resolución Rectoral de 5 de mayo de 2026'],
-    ['Fuente: Portal de Transparencia UCM · Anexo Presupuestos 2026'],
+    ['Universidad Complutense de Madrid — Gastos de Personal'],
+    ['Fuente: Portal de Transparencia UCM · Cuentas Anuales 2024 · Anexo Presupuestos 2026'],
     [],
-    ['1. COMPOSICIÓN DEL GASTO DE PERSONAL 2026 POR ARTÍCULO'],
+    ['1. DISTRIBUCIÓN DE COSTES DE PERSONAL POR GRUPOS DE CLASIFICACIÓN — EJERCICIO 2024 (LIQUIDADO)'],
+    ['Fuente: Cuentas Anuales UCM 2024, Estado de Liquidación del Presupuesto de Gastos, Cap. I (pág. 72)'],
+    ['Artículo','Descripción','Obligaciones Reconocidas Netas (€)','% s/total personal'],
+    [120,'Retribuciones Básicas (funcionarios)',85371156.38,0.1764],
+    [121,'Retribuciones Complementarias (funcionarios)',135827047.20,0.2807],
+    [123,'Asignación por Destino en el Extranjero',30997.08,0.0001],
+    ['','Subtotal Personal Funcionario (Art.12x)',221229200.66,0.4572],
+    [130,'Personal Laboral Fijo',94191289.67,0.1947],
+    [131,'Personal Laboral Eventual',63681801.17,0.1316],
+    ['','Subtotal Personal Laboral (Art.13x)',157873090.84,0.3263],
+    [141,'Otro Personal',3204792.11,0.0066],
+    [150,'Productividad',5472747.29,0.0113],
+    [151,'Gratificaciones',360871.79,0.0007],
+    ['','Subtotal Otro Personal / Retrib. Variables',9038411.19,0.0187],
+    [160,'Cuotas Sociales (cuota patronal)',85088973.11,0.1759],
+    [161,'Prestaciones Sociales',9774767.53,0.0202],
+    [162,'Gastos Sociales a favor del Personal',856193.65,0.0018],
+    ['','Subtotal Cuotas y Gastos Sociales (Art.16x)',95719934.29,0.1978],
+    ['','TOTAL CAPÍTULO I — 2024 LIQUIDADO',483860634.98,1.0],
+    [],
+    ['2. COMPOSICIÓN DEL GASTO DE PERSONAL 2026 POR ARTÍCULO (PRESUPUESTO PRORROGADO)'],
     ['Artículo','Importe 2026 (€)','% 2026','Importe 2024 (€)','Diferencia (€)','Var. %'],
     ...COMPOSICION.map(d=>[d.nombre,d.imp,d.pct/100,d.imp24,+(d.imp-d.imp24).toFixed(2),+((d.imp-d.imp24)/d.imp24*100).toFixed(2)]),
     ['Total Capítulo I',446012872.87,1.0,446895053.91,-882181.04,-0.20],
     [],
-    ['2. CAPÍTULO I POR COLECTIVO — 2026 (= 2025 POR PRÓRROGA)'],
+    ['3. CAPÍTULO I POR COLECTIVO — 2026 (= 2025 POR PRÓRROGA)'],
     ['Colectivo','Importe 2026 (€)','% 2026','Importe 2025 (€)','Variación (€)'],
     ['PDI',272574374.88,0.6113,272574374.88,0],
     ['PTGAS',167097920.05,0.3747,167097920.05,0],
     ['Otros Gastos de Personal',6340577.94,0.0142,6340577.94,0],
     ['Total Capítulo I',446012872.87,1.0,446012872.87,0],
     [],
-    ['3. EFECTIVOS POR TIPO DE PERSONAL Y GÉNERO (a 30/09/2023 — último dato publicado)'],
+    ['4. EFECTIVOS POR TIPO DE PERSONAL Y GÉNERO (a 30/09/2023 — último dato publicado)'],
     ['Tipo de Personal','Mujeres (N.º)','% s/mujeres','Hombres (N.º)','% s/hombres','Total','% mujeres s/total'],
     ['PDI Funcionario',1059,0.1889,1254,0.2456,2313,0.4578],
     ['PDI Laboral',2319,0.4137,2174,0.4258,4493,0.5161],
@@ -642,23 +782,24 @@ function buildExportRows(){
 document.getElementById('btn-excel').addEventListener('click',()=>{
   const rows=buildExportRows();
   const ws=XLSX.utils.aoa_to_sheet(rows);
-  ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:6}},{s:{r:1,c:0},e:{r:1,c:6}},{s:{r:2,c:0},e:{r:2,c:6}}];
   ws['!cols']=[{wch:44},{wch:18},{wch:10},{wch:18},{wch:16},{wch:14},{wch:14}];
   const wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,ws,'Gastos Personal 2026');
-  XLSX.writeFile(wb,'UCM_GastosPersonal_2026.xlsx');
+  XLSX.utils.book_append_sheet(wb,ws,'Gastos Personal UCM');
+  XLSX.writeFile(wb,'UCM_GastosPersonal.xlsx');
 });
 
 document.getElementById('btn-csv').addEventListener('click',()=>{
   const rows=buildExportRows();
   const csv='sep=;\r\n'+rows.map(r=>r.map(c=>{const s=c==null?'':String(c);return s.includes(';')||s.includes('"')?`"${s.replace(/"/g,'""')}"`:s;}).join(';')).join('\r\n');
   const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='UCM_GastosPersonal_2026.csv';a.click();
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='UCM_GastosPersonal.csv';a.click();
 });
 
 document.addEventListener('DOMContentLoaded',()=>{
-  initBarras();
+  renderBarras('hbars-2024', GRUPOS_2024, '--rojo');
+  renderBarras('hbars-composicion', COMPOSICION, '--rojo');
   initTablaArticulos();
+  initChart2024();
   initChartComparativa();
   initChartDona();
   initChartEfectivos();
